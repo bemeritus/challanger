@@ -310,3 +310,107 @@ async fn habit_toggle_is_idempotent(pool: PgPool) {
         "ikkinchi toggle belgini olib tashlashi kerak"
     );
 }
+
+// ------------------------- Modullar (features) -------------------------
+
+#[sqlx::test]
+async fn first_user_is_admin_and_sees_full_catalog(pool: PgPool) {
+    let app = app_with(pool);
+    let (alice, _) = signup(&app, "alice").await;
+
+    let (st, v) = call(&app, "GET", "/api/features", Some(&alice), None).await;
+    assert_eq!(st, StatusCode::OK);
+    // Birinchi ro'yxatdan o'tgan — admin.
+    assert_eq!(v["is_admin"], true, "birinchi foydalanuvchi admin bo'lishi kerak");
+    // Katalog to'liq va hammasi dastlab yoqilgan.
+    let feats = v["features"].as_array().unwrap();
+    assert_eq!(feats.len(), 7);
+    assert!(feats.iter().all(|f| f["global_enabled"] == true && f["user_enabled"] == true));
+
+    // Keyingi foydalanuvchi admin emas.
+    let (bob, _) = signup(&app, "bob").await;
+    let (_, v) = call(&app, "GET", "/api/features", Some(&bob), None).await;
+    assert_eq!(v["is_admin"], false);
+}
+
+#[sqlx::test]
+async fn admin_global_disable_blocks_module_api(pool: PgPool) {
+    let app = app_with(pool);
+    let (alice, _) = signup(&app, "alice").await; // admin
+
+    // Dastlab habits API ochiq.
+    let (st, _) = call(&app, "GET", "/api/habits", Some(&alice), None).await;
+    assert_eq!(st, StatusCode::OK);
+
+    // Admin habits modulini butun ilova uchun o'chiradi.
+    let (st, _) = call(
+        &app,
+        "PUT",
+        "/api/features/global",
+        Some(&alice),
+        Some(json!({ "key": "habits", "enabled": false })),
+    )
+    .await;
+    assert_eq!(st, StatusCode::OK);
+
+    // Endi gate API'ni bloklaydi.
+    let (st, _) = call(&app, "GET", "/api/habits", Some(&alice), None).await;
+    assert_eq!(st, StatusCode::FORBIDDEN, "o'chirilgan modul 403 qaytarishi kerak");
+
+    // Qayta yoqilsa — yana ishlaydi.
+    let (st, _) = call(
+        &app,
+        "PUT",
+        "/api/features/global",
+        Some(&alice),
+        Some(json!({ "key": "habits", "enabled": true })),
+    )
+    .await;
+    assert_eq!(st, StatusCode::OK);
+    let (st, _) = call(&app, "GET", "/api/habits", Some(&alice), None).await;
+    assert_eq!(st, StatusCode::OK);
+}
+
+#[sqlx::test]
+async fn non_admin_cannot_toggle_global(pool: PgPool) {
+    let app = app_with(pool);
+    let (_alice, _) = signup(&app, "alice").await; // admin
+    let (bob, _) = signup(&app, "bob").await; // oddiy foydalanuvchi
+
+    let (st, _) = call(
+        &app,
+        "PUT",
+        "/api/features/global",
+        Some(&bob),
+        Some(json!({ "key": "habits", "enabled": false })),
+    )
+    .await;
+    assert_eq!(st, StatusCode::UNAUTHORIZED, "admin bo'lmagan global o'zgartira olmaydi");
+}
+
+#[sqlx::test]
+async fn user_hide_is_cosmetic_not_gated(pool: PgPool) {
+    let app = app_with(pool);
+    let (alice, _) = signup(&app, "alice").await;
+
+    // Foydalanuvchi pomodoro modulini o'ziga yashiradi.
+    let (st, _) = call(
+        &app,
+        "PUT",
+        "/api/features/me",
+        Some(&alice),
+        Some(json!({ "key": "pomodoro", "enabled": false })),
+    )
+    .await;
+    assert_eq!(st, StatusCode::OK);
+
+    // /features'da user_enabled=false ko'rinadi.
+    let (_, v) = call(&app, "GET", "/api/features", Some(&alice), None).await;
+    let pomo = v["features"].as_array().unwrap().iter().find(|f| f["key"] == "pomodoro").unwrap();
+    assert_eq!(pomo["user_enabled"], false);
+    assert_eq!(pomo["global_enabled"], true);
+
+    // Shaxsiy yashirish faqat UI — API baribir ishlaydi (gate qilinmaydi).
+    let (st, _) = call(&app, "GET", "/api/pomodoro", Some(&alice), None).await;
+    assert_eq!(st, StatusCode::OK);
+}

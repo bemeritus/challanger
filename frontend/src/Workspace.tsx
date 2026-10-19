@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { api } from "./api";
 import { useT } from "./i18n";
+import { useFeatures } from "./features";
 import { parseTask } from "./nlp";
 import type { Habit, Project, Subtask, Task, User } from "./types";
 import { Sidebar, type Selection } from "./components/Sidebar";
@@ -22,14 +23,33 @@ interface Props {
   onUserUpdate: (u: User) => void;
 }
 
+// Joriy sahifa/tanlovni sahifa yangilangandan keyin ham eslab qolish uchun localStorage.
+const SELECTION_KEY = "challanger_selection";
+const DEFAULT_SELECTION: Selection = { kind: "smart", view: "today" };
+
+function loadSelection(): Selection {
+  try {
+    const raw = localStorage.getItem(SELECTION_KEY);
+    if (!raw) return DEFAULT_SELECTION;
+    const s = JSON.parse(raw) as Selection;
+    if (s && (s.kind === "smart" || s.kind === "project" || s.kind === "page")) return s;
+  } catch {
+    /* buzilgan qiymat — standartga qaytamiz */
+  }
+  return DEFAULT_SELECTION;
+}
+
 export default function Workspace({ user, onLogout, onUserUpdate }: Props) {
   const t = useT();
+  const { isEnabled } = useFeatures();
   const [projects, setProjects] = useState<Project[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [habits, setHabits] = useState<Habit[]>([]);
   const [subtasks, setSubtasks] = useState<Subtask[]>([]);
-  const [selection, setSelection] = useState<Selection>({ kind: "smart", view: "today" });
+  const [selection, setSelection] = useState<Selection>(loadSelection);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  // Mobil: sidebar off-canvas drawer holati
+  const [navOpen, setNavOpen] = useState(false);
   const [showCompleted, setShowCompleted] = useState(false);
   const [quick, setQuick] = useState("");
   const [tagFilter, setTagFilter] = useState<string | null>(null);
@@ -56,6 +76,27 @@ export default function Workspace({ user, onLogout, onUserUpdate }: Props) {
       })
       .catch((e) => setError(String(e.message ?? e)));
   }, []);
+
+  // Tanlovni saqlab turamiz — sahifa yangilangandan keyin ham o'sha joyda qolamiz.
+  useEffect(() => {
+    try {
+      localStorage.setItem(SELECTION_KEY, JSON.stringify(selection));
+    } catch {
+      /* localStorage mavjud emas/to'la — jim o'tamiz */
+    }
+  }, [selection]);
+
+  // Saqlangan tanlov o'chirilgan loyihaga ishora qilsa (boshqa qurilmada o'chirilgan
+  // bo'lishi mumkin) — standart ko'rinishga qaytamiz.
+  useEffect(() => {
+    if (
+      selection.kind === "project" &&
+      projects.length > 0 &&
+      !projects.some((p) => p.id === selection.id)
+    ) {
+      setSelection(DEFAULT_SELECTION);
+    }
+  }, [projects, selection]);
 
   // Brauzer bildirishnomalariga ruxsat
   useEffect(() => {
@@ -534,6 +575,10 @@ export default function Workspace({ user, onLogout, onUserUpdate }: Props) {
 
   const renderPage = () => {
     if (selection.kind !== "page") return null;
+    // Sozlamalar yadro sahifa — doim ochiq. Qolganlari modul sifatida o'chirilishi mumkin.
+    if (selection.page !== "settings" && !isEnabled(selection.page)) {
+      return <div className="page empty-state">{t("features.disabled")}</div>;
+    }
     switch (selection.page) {
       case "calendar":
         return <CalendarPage tasks={tasks} onSelectTask={setSelectedId} onAddForDay={addForDay} />;
@@ -557,7 +602,7 @@ export default function Workspace({ user, onLogout, onUserUpdate }: Props) {
   };
 
   return (
-    <div className="app">
+    <div className={`app ${navOpen ? "nav-open" : ""}`}>
       <CommandPalette
         tasks={tasks}
         habits={habits}
@@ -565,6 +610,15 @@ export default function Workspace({ user, onLogout, onUserUpdate }: Props) {
         onSelectTask={setSelectedId}
         onSelect={selectAndClear}
       />
+      {/* Mobil: menyuni ochish tugmasi va fon (faqat kichik ekranda ko'rinadi) */}
+      <button
+        className="nav-toggle"
+        onClick={() => setNavOpen((o) => !o)}
+        aria-label={t("nav.menu")}
+      >
+        ☰
+      </button>
+      <div className="nav-backdrop" onClick={() => setNavOpen(false)} />
       <Sidebar
         projects={projects}
         counts={counts}
@@ -574,6 +628,7 @@ export default function Workspace({ user, onLogout, onUserUpdate }: Props) {
         onSelect={(s) => {
           setSelection(s);
           setSelectedId(null);
+          setNavOpen(false); // tanlagach mobil drawer yopiladi
         }}
         onCreateProject={addProject}
         onDeleteProject={removeProject}

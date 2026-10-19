@@ -86,12 +86,14 @@ async fn main() -> anyhow::Result<()> {
         tokio::spawn(reminders::run(db.clone(), telegram.clone(), push.clone()));
     }
 
+    let features = challanger::features::load(&db).await;
     let state = AppState {
         db,
         jwt_secret: Arc::new(jwt_secret),
         telegram,
         push,
         hub: realtime::Hub::new(),
+        features,
     };
 
     // CORS: CORS_ALLOWED_ORIGINS (vergul bilan) berilsa — faqat o'shalar; aks holda
@@ -154,6 +156,11 @@ async fn main() -> anyhow::Result<()> {
         .merge(routes::subtasks::router())
         .merge(routes::telegram::router())
         .merge(push::router())
+        .merge(challanger::features::router())
+        .layer(axum::middleware::from_fn_with_state(
+            state.clone(),
+            challanger::features::feature_gate,
+        ))
         .layer(GovernorLayer::new(general_conf));
 
     // Qurilgan frontend'ni (Vite `dist`) shu serverdan beramiz.

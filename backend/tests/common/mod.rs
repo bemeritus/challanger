@@ -23,6 +23,7 @@ pub fn app_with(pool: PgPool) -> Router {
         telegram: None,
         push: None,
         hub: challanger::realtime::Hub::new(),
+        features: std::sync::Arc::new(std::sync::RwLock::new(std::collections::HashSet::new())),
     };
     build_app(state)
 }

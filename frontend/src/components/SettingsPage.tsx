@@ -4,6 +4,7 @@ import type { User } from "../types";
 import { getTheme, setTheme, type Theme } from "../theme";
 import { getLang, setLang, useT, LANG_LABELS, type Lang } from "../i18n";
 import { pushState as getPushState, enablePush, disablePush } from "../push";
+import { useFeatures } from "../features";
 
 interface Props {
   user: User;
@@ -19,6 +20,26 @@ export function SettingsPage({ user, onUserUpdate, onLogout }: Props) {
   const chooseLang = (l: Lang) => {
     setLang(l);
     setLangState(l);
+  };
+
+  // --- Modullar (features) ---
+  const { features, isAdmin, setMine, setGlobal } = useFeatures();
+  const [featBusy, setFeatBusy] = useState<string | null>(null);
+  const toggleMine = async (key: string, enabled: boolean) => {
+    setFeatBusy(key);
+    try {
+      await setMine(key, enabled);
+    } finally {
+      setFeatBusy(null);
+    }
+  };
+  const toggleGlobal = async (key: string, enabled: boolean) => {
+    setFeatBusy(key);
+    try {
+      await setGlobal(key, enabled);
+    } finally {
+      setFeatBusy(null);
+    }
   };
 
   // --- Profil ---
@@ -399,6 +420,46 @@ export function SettingsPage({ user, onUserUpdate, onLogout }: Props) {
                 : t("settings.themeGruvbox")}
             </button>
           ))}
+        </div>
+      </section>
+
+      {/* Modullar */}
+      <section className="card">
+        <h3>{t("settings.features")}</h3>
+        <p className="settings-note">
+          {isAdmin ? t("settings.featuresInfoAdmin") : t("settings.featuresInfo")}
+        </p>
+        <div className="feature-list">
+          {features.map((f) => {
+            const globalOff = !f.global_enabled;
+            return (
+              <div key={f.key} className="settings-inline feature-row">
+                <span className="settings-note">
+                  {t("nav." + f.key)}
+                  {globalOff && <em> · {t("settings.featureGlobalOff")}</em>}
+                </span>
+                <div className="confirm-row">
+                  {isAdmin && (
+                    <button
+                      className={f.global_enabled ? "btn-secondary" : "btn-primary"}
+                      disabled={featBusy === f.key}
+                      onClick={() => toggleGlobal(f.key, !f.global_enabled)}
+                    >
+                      {t("settings.featureGlobal")}:{" "}
+                      {f.global_enabled ? t("common.on") : t("common.off")}
+                    </button>
+                  )}
+                  <button
+                    className={f.user_enabled ? "btn-secondary" : "btn-primary"}
+                    disabled={globalOff || featBusy === f.key}
+                    onClick={() => toggleMine(f.key, !f.user_enabled)}
+                  >
+                    {f.user_enabled ? t("settings.featureHide") : t("settings.featureShow")}
+                  </button>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </section>
 

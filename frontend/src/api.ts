@@ -114,6 +114,18 @@ interface AuthResponse {
   user: User;
 }
 
+export interface FeatureState {
+  key: string;
+  label: string;
+  global_enabled: boolean;
+  user_enabled: boolean;
+}
+
+export interface FeaturesResponse {
+  features: FeatureState[];
+  is_admin: boolean;
+}
+
 export interface PomodoroStats {
   today: number;
   total: number;
@@ -166,6 +178,15 @@ export const api = {
       body: JSON.stringify(data),
     }),
   pomodoroStats: () => req<PomodoroStats>("/pomodoro"),
+
+  // --- Modullar (features) ---
+  features: () => req<FeaturesResponse>("/features"),
+  // Shu foydalanuvchi uchun modulni yoqish/yashirish
+  setUserFeature: (key: string, enabled: boolean) =>
+    req<{ ok: boolean }>("/features/me", { method: "PUT", body: JSON.stringify({ key, enabled }) }),
+  // Admin: modulni butun ilova uchun yoqish/o'chirish
+  setGlobalFeature: (key: string, enabled: boolean) =>
+    req<{ ok: boolean }>("/features/global", { method: "PUT", body: JSON.stringify({ key, enabled }) }),
 
   // --- Loyihalar ---
   listProjects: () => req<Project[]>("/projects"),

@@ -3,6 +3,7 @@ import { api, setUnauthorizedHandler, tokenStore } from "./api";
 import type { User } from "./types";
 import { AuthScreen } from "./components/AuthScreen";
 import Workspace from "./Workspace";
+import { FeaturesProvider } from "./features";
 import { t } from "./i18n";
 
 export default function App() {
@@ -43,5 +44,9 @@ export default function App() {
     return <AuthScreen onAuth={setUser} />;
   }
 
-  return <Workspace user={user} onLogout={logout} onUserUpdate={setUser} />;
+  return (
+    <FeaturesProvider>
+      <Workspace user={user} onLogout={logout} onUserUpdate={setUser} />
+    </FeaturesProvider>
+  );
 }

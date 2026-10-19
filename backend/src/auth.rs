@@ -298,9 +298,11 @@ async fn signup(
 
     let hash = hash_password(&body.password)?;
 
+    // Birinchi ro'yxatdan o'tgan foydalanuvchi avtomatik admin bo'ladi —
+    // modullarni global boshqarish uchun boshlang'ich huquq.
     let user = sqlx::query_as::<_, User>(
-        "INSERT INTO users (username, email, password_hash)
-         VALUES ($1, $2, $3) RETURNING *",
+        "INSERT INTO users (username, email, password_hash, is_admin)
+         VALUES ($1, $2, $3, NOT EXISTS (SELECT 1 FROM users)) RETURNING *",
     )
     .bind(&username)
     .bind(&email)

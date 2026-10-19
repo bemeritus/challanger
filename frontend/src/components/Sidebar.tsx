@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { Project, User } from "../types";
 import { useT } from "../i18n";
+import { useFeatures } from "../features";
 
 export type Page = "calendar" | "eisenhower" | "habits" | "groups" | "stats" | "pomodoro" | "countdown" | "settings";
 
@@ -49,6 +50,9 @@ export function Sidebar({
 }: Props) {
   const [newName, setNewName] = useState("");
   const t = useT();
+  const { isEnabled } = useFeatures();
+  // Faqat yoqilgan modullar menyuda ko'rinadi (kalit = sahifa nomi).
+  const pages = PAGES.filter((p) => isEnabled(p.page));
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -82,7 +86,7 @@ export function Sidebar({
 
       <div className="nav-heading">{t("nav.tools")}</div>
       <nav className="nav-group">
-        {PAGES.map((p) => {
+        {pages.map((p) => {
           const active = selection.kind === "page" && selection.page === p.page;
           return (
             <button

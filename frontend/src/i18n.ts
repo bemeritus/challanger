@@ -82,7 +82,20 @@ const uz: Dict = {
   "nav.settings": "Sozlamalar",
   "nav.newProject": "+ Yangi loyiha",
   "nav.logout": "Chiqish",
+  "nav.menu": "Menyu",
   "nav.delete": "O'chirish",
+
+  // Modullar (features)
+  "common.on": "yoqilgan",
+  "common.off": "o'chiq",
+  "features.disabled": "Bu modul o'chirilgan.",
+  "settings.features": "Modullar",
+  "settings.featuresInfo": "Kerak bo'lmagan bo'limlarni o'zingiz uchun yashiring. Istalgan vaqtda qayta yoqasiz.",
+  "settings.featuresInfoAdmin": "Modullarni o'zingiz uchun yashiring yoki admin sifatida butun ilova uchun yoqing/o'chiring.",
+  "settings.featureGlobalOff": "admin o'chirgan",
+  "settings.featureGlobal": "Hamma uchun",
+  "settings.featureShow": "Ko'rsatish",
+  "settings.featureHide": "Yashirish",
 
   // Asosiy ko'rinish
   "main.today": "Bugun",
@@ -444,7 +457,20 @@ const en: Dict = {
   "nav.settings": "Settings",
   "nav.newProject": "+ New project",
   "nav.logout": "Log out",
+  "nav.menu": "Menu",
   "nav.delete": "Delete",
+
+  // Modules (features)
+  "common.on": "on",
+  "common.off": "off",
+  "features.disabled": "This module is disabled.",
+  "settings.features": "Modules",
+  "settings.featuresInfo": "Hide sections you don't need. You can re-enable them anytime.",
+  "settings.featuresInfoAdmin": "Hide modules for yourself, or as an admin enable/disable them for the whole app.",
+  "settings.featureGlobalOff": "disabled by admin",
+  "settings.featureGlobal": "Everyone",
+  "settings.featureShow": "Show",
+  "settings.featureHide": "Hide",
 
   // Main view
   "main.today": "Today",
@@ -806,7 +832,20 @@ const ru: Dict = {
   "nav.settings": "Настройки",
   "nav.newProject": "+ Новый проект",
   "nav.logout": "Выйти",
+  "nav.menu": "Меню",
   "nav.delete": "Удалить",
+
+  // Модули (features)
+  "common.on": "вкл",
+  "common.off": "выкл",
+  "features.disabled": "Этот модуль отключён.",
+  "settings.features": "Модули",
+  "settings.featuresInfo": "Скройте ненужные разделы. Их можно включить обратно в любой момент.",
+  "settings.featuresInfoAdmin": "Скрывайте модули для себя или как админ включайте/отключайте их для всего приложения.",
+  "settings.featureGlobalOff": "отключено админом",
+  "settings.featureGlobal": "Для всех",
+  "settings.featureShow": "Показать",
+  "settings.featureHide": "Скрыть",
 
   // Основной вид
   "main.today": "Сегодня",
