@@ -5,6 +5,7 @@ pub mod auth;
 pub mod error;
 pub mod models;
 pub mod push;
+pub mod realtime;
 pub mod reminders;
 pub mod routes;
 pub mod telegram;
@@ -24,6 +25,8 @@ pub struct AppState {
     pub jwt_secret: Arc<String>,
     pub telegram: Option<Arc<TelegramBot>>,
     pub push: Option<Arc<push::WebPush>>,
+    /// Guruh real-vaqt (SSE) hodisalarini tarqatuvchi xotiradagi hub.
+    pub hub: realtime::Hub,
 }
 
 /// Barcha API route'larini birlashtiradi (rate-limit/CORS/static'siz).

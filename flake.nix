@@ -74,6 +74,10 @@
             env = {
               # Required by rust-analyzer
               RUST_SRC_PATH = "${pkgs.rustToolchain}/lib/rustlib/src/rust/library";
+              # web-push (hyper-tls, ece) dinamik ravishda OpenSSL'ga bog'lanadi.
+              # Ishga tushish vaqtida libssl.so.3 topilishi uchun lib yo'lini beramiz,
+              # aks holda backend "libssl.so.3 not found" bilan qulaydi (→ Bad Gateway).
+              LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [ pkgs.openssl ];
               # Local dev database connection
               DATABASE_URL = "postgres://challanger:challanger@localhost:5433/challanger";
               PGDATA = "./.pg/data";

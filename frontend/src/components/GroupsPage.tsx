@@ -97,6 +97,17 @@ export function GroupsPage({ user }: { user: User }) {
   const refreshDetail = () =>
     selectedId && api.getGroup(selectedId).then((d) => setDetail(normalizeDetail(d))).catch(() => {});
 
+  // Real-vaqt: ochiq guruhga SSE bilan ulanamiz. Boshqa a'zo xabar yuborsa/o'chirsa
+  // signal keladi va guruh detalini qayta yuklaymiz (chat jonli yangilanadi).
+  // `EventSource` ulanish uzilsa o'zi qayta ulanadi.
+  useEffect(() => {
+    if (!selectedId) return;
+    const es = new EventSource(api.groupEventsUrl(selectedId));
+    es.onmessage = () => refreshDetail();
+    return () => es.close();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedId]);
+
   const createGroup = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newName.trim()) return;

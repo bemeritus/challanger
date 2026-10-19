@@ -113,6 +113,21 @@ fn make_token(user_id: Uuid, secret: &str) -> AppResult<String> {
     .map_err(|_| AppError::BadRequest("token yaratib bo'lmadi".into()))
 }
 
+/// Access token'ni tekshirib, undagi foydalanuvchi id'sini chiqaradi.
+///
+/// `AuthUser` extractor shuni ishlatadi; shuningdek `Authorization` header
+/// qo'ya olmaydigan joylar (masalan, SSE `EventSource`, token `?token=` query
+/// orqali keladi) uchun ham to'g'ridan-to'g'ri chaqiriladi.
+pub fn verify_access_token(secret: &str, token: &str) -> AppResult<Uuid> {
+    let data = decode::<Claims>(
+        token,
+        &DecodingKey::from_secret(secret.as_bytes()),
+        &Validation::default(),
+    )
+    .map_err(|_| AppError::Unauthorized)?;
+    Uuid::parse_str(&data.claims.sub).map_err(|_| AppError::Unauthorized)
+}
+
 // ---------- Refresh token ----------
 
 /// Refresh token'ni SHA-256 bilan hashlaydi (bazada faqat hash saqlanadi).
@@ -215,14 +230,7 @@ where
             .strip_prefix("Bearer ")
             .ok_or(AppError::Unauthorized)?;
 
-        let data = decode::<Claims>(
-            token,
-            &DecodingKey::from_secret(app.jwt_secret.as_bytes()),
-            &Validation::default(),
-        )
-        .map_err(|_| AppError::Unauthorized)?;
-
-        let id = Uuid::parse_str(&data.claims.sub).map_err(|_| AppError::Unauthorized)?;
+        let id = verify_access_token(&app.jwt_secret, token)?;
         Ok(AuthUser { id })
     }
 }

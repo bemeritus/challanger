@@ -22,6 +22,7 @@ pub fn app_with(pool: PgPool) -> Router {
         jwt_secret: Arc::new("test-secret-key-1234567890".into()),
         telegram: None,
         push: None,
+        hub: challanger::realtime::Hub::new(),
     };
     build_app(state)
 }

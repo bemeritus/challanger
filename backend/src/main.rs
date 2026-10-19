@@ -11,7 +11,7 @@ use tower_http::services::{ServeDir, ServeFile};
 use tower_http::trace::TraceLayer;
 
 use challanger::telegram::TelegramBot;
-use challanger::{AppState, auth, push, reminders, routes};
+use challanger::{AppState, auth, push, realtime, reminders, routes};
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
@@ -91,6 +91,7 @@ async fn main() -> anyhow::Result<()> {
         jwt_secret: Arc::new(jwt_secret),
         telegram,
         push,
+        hub: realtime::Hub::new(),
     };
 
     // CORS: CORS_ALLOWED_ORIGINS (vergul bilan) berilsa — faqat o'shalar; aks holda

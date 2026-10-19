@@ -1,11 +1,16 @@
 use std::collections::HashMap;
+use std::convert::Infallible;
+use std::time::Duration;
 
-use axum::extract::{Path, State};
+use axum::extract::{Path, Query, State};
+use axum::response::sse::{Event, KeepAlive, Sse};
 use axum::routing::{get, patch, post};
 use axum::{Json, Router};
 use chrono::{DateTime, NaiveDate, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
+use tokio_stream::wrappers::BroadcastStream;
+use tokio_stream::{Stream, StreamExt};
 use uuid::Uuid;
 
 use crate::auth::AuthUser;
@@ -234,6 +239,7 @@ pub fn router() -> Router<AppState> {
         )
         .route("/groups/{id}/members/{uid}/role", post(set_role))
         .route("/groups/{id}/leave", post(leave_group))
+        .route("/groups/{id}/events", get(group_events))
         .route("/groups/{id}/nudge", post(nudge))
         .route("/groups/{id}/habits", post(create_group_habit))
         .route(
@@ -1069,6 +1075,35 @@ async fn toggle_group_habit(
 
 // ---------- Chat ----------
 
+#[derive(Debug, Deserialize)]
+struct EventsQuery {
+    /// Access token — `EventSource` maxsus header qo'ya olmagani uchun query orqali.
+    token: String,
+}
+
+/// Guruh uchun real-vaqt hodisa oqimi (Server-Sent Events).
+///
+/// Brauzer `EventSource` bilan ulanadi; guruhda biror o'zgarish bo'lganda
+/// (hozircha: chat xabari qo'shilishi/o'chirilishi) kichik signal keladi va
+/// frontend guruh detalini qayta yuklaydi. Auth header qo'yib bo'lmagani uchun
+/// token `?token=` query orqali kelib, shu yerda tekshiriladi.
+async fn group_events(
+    State(st): State<AppState>,
+    Path(id): Path<Uuid>,
+    Query(q): Query<EventsQuery>,
+) -> AppResult<Sse<impl Stream<Item = Result<Event, Infallible>>>> {
+    let user_id = crate::auth::verify_access_token(&st.jwt_secret, &q.token)?;
+    require_member(&st, id, user_id).await?;
+
+    let stream = BroadcastStream::new(st.hub.subscribe(id)).filter_map(|msg| match msg {
+        Ok(data) => Some(Ok(Event::default().data(data))),
+        // Tinglovchi sekin qolib `Lagged` bo'lsa — o'tkazib yuboramiz (ulanish uziladi emas).
+        Err(_) => None,
+    });
+
+    Ok(Sse::new(stream).keep_alive(KeepAlive::new().interval(Duration::from_secs(15))))
+}
+
 async fn send_group_message(
     State(st): State<AppState>,
     user: AuthUser,
@@ -1090,6 +1125,8 @@ async fn send_group_message(
     .bind(text)
     .fetch_one(&st.db)
     .await?;
+    // Guruhga ulangan boshqa a'zolarga yangi xabar haqida signal (realtime chat).
+    st.hub.publish(id, r#"{"kind":"message"}"#);
     Ok(Json(row))
 }
 
@@ -1099,30 +1136,37 @@ async fn delete_group_message(
     user: AuthUser,
     Path(mid): Path<Uuid>,
 ) -> AppResult<Json<serde_json::Value>> {
-    // Xabar muallifi bo'lsa — o'chira oladi.
-    let res = sqlx::query("DELETE FROM group_messages WHERE id = $1 AND user_id = $2")
-        .bind(mid)
-        .bind(user.id)
-        .execute(&st.db)
-        .await?;
-    if res.rows_affected() > 0 {
-        return Ok(Json(serde_json::json!({ "ok": true })));
-    }
-    // Aks holda — ega/admin bo'lsa o'chira oladi.
-    let res = sqlx::query(
-        "DELETE FROM group_messages m
-         USING group_members gm
-         WHERE m.id = $1 AND gm.group_id = m.group_id AND gm.user_id = $2
-           AND gm.role IN ('owner', 'admin')",
+    // Xabar muallifi bo'lsa — o'chira oladi. Guruh id'sini signal uchun olamiz.
+    let gid: Option<Uuid> = sqlx::query_scalar(
+        "DELETE FROM group_messages WHERE id = $1 AND user_id = $2 RETURNING group_id",
     )
     .bind(mid)
     .bind(user.id)
-    .execute(&st.db)
+    .fetch_optional(&st.db)
     .await?;
-    if res.rows_affected() == 0 {
-        return Err(AppError::NotFound);
+    if let Some(g) = gid {
+        st.hub.publish(g, r#"{"kind":"message"}"#);
+        return Ok(Json(serde_json::json!({ "ok": true })));
     }
-    Ok(Json(serde_json::json!({ "ok": true })))
+    // Aks holda — ega/admin bo'lsa o'chira oladi.
+    let gid: Option<Uuid> = sqlx::query_scalar(
+        "DELETE FROM group_messages m
+         USING group_members gm
+         WHERE m.id = $1 AND gm.group_id = m.group_id AND gm.user_id = $2
+           AND gm.role IN ('owner', 'admin')
+         RETURNING m.group_id",
+    )
+    .bind(mid)
+    .bind(user.id)
+    .fetch_optional(&st.db)
+    .await?;
+    match gid {
+        Some(g) => {
+            st.hub.publish(g, r#"{"kind":"message"}"#);
+            Ok(Json(serde_json::json!({ "ok": true })))
+        }
+        None => Err(AppError::NotFound),
+    }
 }
 
 // ---------- Challenge ----------

@@ -299,6 +299,10 @@ export const api = {
     req<GroupMessage>(`/groups/${id}/messages`, { method: "POST", body: JSON.stringify({ text }) }),
   deleteGroupMessage: (mid: string) =>
     req<{ ok: boolean }>(`/group-messages/${mid}`, { method: "DELETE" }),
+  // Guruh real-vaqt hodisalari uchun SSE URL. `EventSource` header qo'ya olmagani
+  // uchun access token query orqali uzatiladi.
+  groupEventsUrl: (id: string) =>
+    `${BASE}/groups/${id}/events?token=${encodeURIComponent(tokenStore.get() ?? "")}`,
 
   // --- Guruh challenge'lari ---
   createChallenge: (id: string, data: { title: string; start_date: string; end_date: string }) =>
