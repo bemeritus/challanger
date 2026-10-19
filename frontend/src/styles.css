@@ -1,86 +1,105 @@
 :root {
-  --bg: #f4f5fb;
+  /* Yumshoq och-ko'k kanvas + oppoq kartalar + teal accent + navy primary
+     (Mindnest-uslubidagi salomatlik dashboard). */
+  --bg: #dbe6ec;
   --panel: #ffffff;
-  --border: #e6e8ef;
-  --text: #1f2328;
-  --muted: #6b7280;
-  --accent: #6366f1;
-  --accent2: #a855f7;
-  --accent-soft: #eef2ff;
-  --danger: #ef4444;
-  --ok: #16a34a;
-  --radius: 10px;
-  /* Gradientlar (accent/accent2 mavzuga qarab o'zgaradi) */
-  --grad: linear-gradient(135deg, var(--accent), var(--accent2));
-  --grad-hover: linear-gradient(135deg,
-      color-mix(in srgb, var(--accent) 88%, black),
-      color-mix(in srgb, var(--accent2) 88%, black));
-  --shadow: 0 1px 2px rgba(16, 18, 40, 0.04), 0 4px 16px rgba(16, 18, 40, 0.04);
-  --shadow-lg: 0 10px 40px rgba(80, 60, 180, 0.12);
-  /* Dataviz (light) */
-  --viz-s1: #2a78d6;
-  --viz-s2: #1baf7a;
-  --viz-remaining: #d9dae0;
-  --viz-grid: #e6e8ef;
-  --viz-axis: #c3c2b7;
+  --border: #ccdae1;
+  --text: #17272e;
+  --muted: #6a7c85;
+  --accent: #3fa3ac;
+  --accent2: #3fa3ac;
+  --accent-soft: #d7ebee;
+  --primary: #17313a;       /* to'q navy — asosiy CTA tugmalar */
+  --primary-hover: #21424d;
+  --on-primary: #ffffff;
+  --danger: #e2585b;
+  --ok: #46a98f;
+  --radius: 14px;
+  /* Panel ICHIDAGI chip/ichki yuza — matn rangiga sal suriladi, shuning uchun
+     light'da sal qorayadi, dark'da sal yorishadi: har temada to'g'ri kontrast. */
+  --surface-2: color-mix(in srgb, var(--text) 5%, var(--panel));
+  /* Gradient yo'q — yassi accent (--grad meros uchun qoldirildi) */
+  --grad: var(--accent);
+  --grad-hover: color-mix(in srgb, var(--accent) 88%, black);
+  --shadow: 0 1px 2px rgba(23, 39, 46, 0.06), 0 6px 18px rgba(23, 39, 46, 0.09);
+  --shadow-lg: 0 12px 34px rgba(23, 39, 46, 0.14);
+  /* Dataviz (teal) */
+  --viz-s1: #3fa3ac;
+  --viz-s2: #6cc0b0;
+  --viz-remaining: #e3e9ed;
+  --viz-grid: #e7edf0;
+  --viz-axis: #c6d2d8;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #14151c;
-    --panel: #1c1e27;
-    --border: #2c2f3d;
-    --text: #e6e8f0;
-    --muted: #9aa4b8;
-    --accent: #818cf8;
-    --accent2: #c084fc;
-    --accent-soft: #272a44;
-    --ok: #34d399;
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.25);
-    --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.45);
-    --viz-s1: #3987e5;
-    --viz-s2: #199e70;
-    --viz-remaining: #33363f;
-    --viz-grid: #2c2f3d;
-    --viz-axis: #383835;
+    --bg: #0f1c21;
+    --panel: #16262c;
+    --border: #24363d;
+    --text: #e2edf0;
+    --muted: #93a6ae;
+    --accent: #4fb3bd;
+    --accent2: #4fb3bd;
+    --accent-soft: #1b3339;
+    --primary: #4fb3bd;
+    --primary-hover: #5fc1cb;
+    --on-primary: #0c1a1f;
+    --danger: #e8686b;
+    --ok: #5bc0a3;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 6px 20px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 12px 34px rgba(0, 0, 0, 0.5);
+    --viz-s1: #4fb3bd;
+    --viz-s2: #6cc0b0;
+    --viz-remaining: #223037;
+    --viz-grid: #24363d;
+    --viz-axis: #36505a;
   }
 }
 
 /* Foydalanuvchi qo'lda tanlagan mavzu (system'ni bekor qiladi) */
 :root[data-theme="light"] {
-  --bg: #f4f5fb;
+  --bg: #dbe6ec;
   --panel: #ffffff;
-  --border: #e6e8ef;
-  --text: #1f2328;
-  --muted: #6b7280;
-  --accent: #6366f1;
-  --accent2: #a855f7;
-  --accent-soft: #eef2ff;
-  --shadow: 0 1px 2px rgba(16, 18, 40, 0.04), 0 4px 16px rgba(16, 18, 40, 0.04);
-  --shadow-lg: 0 10px 40px rgba(80, 60, 180, 0.12);
-  --viz-s1: #2a78d6;
-  --viz-s2: #1baf7a;
-  --viz-remaining: #d9dae0;
-  --viz-grid: #e6e8ef;
-  --viz-axis: #c3c2b7;
+  --border: #ccdae1;
+  --text: #17272e;
+  --muted: #6a7c85;
+  --accent: #3fa3ac;
+  --accent2: #3fa3ac;
+  --accent-soft: #d7ebee;
+  --primary: #17313a;
+  --primary-hover: #21424d;
+  --on-primary: #ffffff;
+  --danger: #e2585b;
+  --ok: #46a98f;
+  --shadow: 0 1px 2px rgba(23, 39, 46, 0.06), 0 6px 18px rgba(23, 39, 46, 0.09);
+  --shadow-lg: 0 12px 34px rgba(23, 39, 46, 0.14);
+  --viz-s1: #3fa3ac;
+  --viz-s2: #6cc0b0;
+  --viz-remaining: #e3e9ed;
+  --viz-grid: #e7edf0;
+  --viz-axis: #c6d2d8;
 }
 :root[data-theme="dark"] {
-  --bg: #14151c;
-  --panel: #1c1e27;
-  --border: #2c2f3d;
-  --text: #e6e8f0;
-  --muted: #9aa4b8;
-  --accent: #818cf8;
-  --accent2: #c084fc;
-  --accent-soft: #272a44;
-  --ok: #34d399;
-  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.25);
-  --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.45);
-  --viz-s1: #3987e5;
-  --viz-s2: #199e70;
-  --viz-remaining: #33363f;
-  --viz-grid: #2c2f3d;
-  --viz-axis: #383835;
+  --bg: #0f1c21;
+  --panel: #16262c;
+  --border: #24363d;
+  --text: #e2edf0;
+  --muted: #93a6ae;
+  --accent: #4fb3bd;
+  --accent2: #4fb3bd;
+  --accent-soft: #1b3339;
+  --primary: #4fb3bd;
+  --primary-hover: #5fc1cb;
+  --on-primary: #0c1a1f;
+  --danger: #e8686b;
+  --ok: #5bc0a3;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 6px 20px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 12px 34px rgba(0, 0, 0, 0.5);
+  --viz-s1: #4fb3bd;
+  --viz-s2: #6cc0b0;
+  --viz-remaining: #223037;
+  --viz-grid: #24363d;
+  --viz-axis: #36505a;
 }
 
 /* Gruvbox (iliq, qorong'i) — https://github.com/morhetz/gruvbox */
@@ -93,6 +112,9 @@
   --accent: #fabd2f;      /* sariq */
   --accent2: #fe8019;     /* to'q sariq */
   --accent-soft: #45372a; /* iliq qorong'i */
+  --primary: #504945;     /* bg2 — to'q tugma */
+  --primary-hover: #5c534d;
+  --on-primary: #ebdbb2;
   --danger: #fb4934;      /* qizil */
   --ok: #b8bb26;          /* yashil */
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 4px 16px rgba(0, 0, 0, 0.3);
@@ -131,11 +153,7 @@ body {
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   color: var(--text);
   font-size: 14px;
-  background:
-    radial-gradient(1100px 600px at 100% 0%, color-mix(in srgb, var(--accent2) 12%, transparent), transparent 60%),
-    radial-gradient(900px 500px at 0% 100%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 55%),
-    var(--bg);
-  background-attachment: fixed;
+  background: var(--bg);
 }
 
 .app {
@@ -159,32 +177,34 @@ body {
   font-size: 20px;
   border: 1px solid var(--border);
   border-radius: 10px;
-  background: color-mix(in srgb, var(--panel) 92%, transparent);
-  backdrop-filter: blur(8px);
+  background: var(--panel);
   color: var(--text);
   cursor: pointer;
 }
 .nav-backdrop { display: none; }
 
-/* ---------- Sidebar ---------- */
+/* ---------- Sidebar (suzuvchi yumaloq panel) ---------- */
 .sidebar {
-  background: color-mix(in srgb, var(--panel) 82%, transparent);
-  backdrop-filter: blur(12px);
-  border-right: 1px solid var(--border);
+  background: var(--panel);
+  margin: 12px 0 12px 12px;
+  border-radius: 20px;
+  box-shadow: var(--shadow);
   padding: 16px 10px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
 }
 .logo {
-  font-size: 19px;
-  margin: 4px 8px 18px;
-  font-weight: 700;
-  background: var(--grad);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  margin: 4px 8px 20px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--text);
 }
+.logo svg { color: var(--accent); flex-shrink: 0; }
 .nav-group { display: flex; flex-direction: column; gap: 2px; }
 .nav-heading {
   font-size: 11px;
@@ -202,20 +222,19 @@ body {
   border: none;
   background: transparent;
   color: var(--text);
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
   font-size: 14px;
   text-align: left;
 }
 .nav-item:hover { background: color-mix(in srgb, var(--accent) 8%, transparent); }
 .nav-item.active {
-  background: linear-gradient(135deg,
-    color-mix(in srgb, var(--accent) 16%, transparent),
-    color-mix(in srgb, var(--accent2) 16%, transparent));
+  background: var(--accent-soft);
   color: var(--accent);
   font-weight: 600;
 }
-.nav-icon { width: 18px; text-align: center; }
+.nav-icon { width: 18px; display: inline-flex; align-items: center; justify-content: center; color: var(--muted); }
+.nav-item.active .nav-icon { color: var(--accent); }
 .nav-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .nav-count { color: var(--muted); font-size: 12px; }
 
@@ -276,14 +295,15 @@ body {
 .main-head h2 { margin: 0; font-size: 20px; margin-right: auto; }
 
 .task-search {
-  padding: 7px 12px;
+  padding: 9px 16px;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 999px;
   background: var(--panel);
   color: var(--text);
   font: inherit;
   font-size: 13px;
   width: 180px;
+  box-shadow: var(--shadow);
   transition: border-color 0.15s, width 0.15s;
 }
 .task-search:focus { outline: none; border-color: var(--accent); width: 220px; }
@@ -334,6 +354,7 @@ body {
   from { opacity: 0; transform: translate(-50%, 10px); }
   to { opacity: 1; transform: translate(-50%, 0); }
 }
+.undo-toast span { display: inline-flex; align-items: center; gap: 6px; }
 .undo-toast button {
   background: transparent;
   border: 1px solid currentColor;
@@ -361,6 +382,9 @@ body {
 .toggle { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 13px; cursor: pointer; }
 
 .error-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   margin: 0 24px 8px;
   padding: 8px 12px;
   background: color-mix(in srgb, var(--danger) 14%, var(--panel));
@@ -438,7 +462,10 @@ body {
 
 .task-body { flex: 1; min-width: 0; }
 .task-title { line-height: 1.4; word-break: break-word; }
-.task-meta { display: flex; gap: 10px; margin-top: 4px; font-size: 12px; color: var(--muted); flex-wrap: wrap; }
+.task-meta { display: flex; align-items: center; gap: 10px; margin-top: 4px; font-size: 12px; color: var(--muted); flex-wrap: wrap; }
+.task-meta .recur, .task-meta .reminder, .task-meta .has-notes, .task-meta .subtask-badge {
+  display: inline-flex; align-items: center; gap: 3px;
+}
 .due.tone-overdue { color: var(--danger); font-weight: 600; }
 .due.tone-today { color: var(--accent); font-weight: 600; }
 .due.tone-soon { color: #d97706; }
@@ -516,7 +543,7 @@ body {
 }
 .user-info:hover { background: var(--bg); }
 .user-info.active { background: var(--accent-soft); }
-.user-info .gear { margin-left: auto; opacity: 0.6; font-size: 13px; }
+.user-info .gear { margin-left: auto; opacity: 0.6; display: inline-flex; }
 .avatar {
   width: 28px; height: 28px;
   border-radius: 50%;
@@ -529,7 +556,8 @@ body {
 .username { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .logout {
   border: none; background: transparent; color: var(--muted);
-  font-size: 18px; cursor: pointer; padding: 6px 8px; border-radius: 6px;
+  cursor: pointer; padding: 6px 8px; border-radius: 6px;
+  display: inline-flex; align-items: center;
 }
 .logout:hover { background: var(--bg); color: var(--danger); }
 
@@ -543,24 +571,20 @@ body {
   min-height: 100vh;
   display: flex; align-items: center; justify-content: center;
   padding: 20px;
-  background:
-    radial-gradient(700px 500px at 15% 10%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 60%),
-    radial-gradient(700px 500px at 85% 90%, color-mix(in srgb, var(--accent2) 22%, transparent), transparent 60%),
-    var(--bg);
+  background: var(--bg);
 }
 .auth-card {
   width: 100%; max-width: 360px;
-  background: color-mix(in srgb, var(--panel) 88%, transparent);
-  backdrop-filter: blur(16px);
-  border: 1px solid color-mix(in srgb, var(--panel) 60%, var(--border));
-  border-radius: 16px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
   padding: 30px 28px;
   display: flex; flex-direction: column; gap: 14px;
   box-shadow: var(--shadow-lg);
 }
 .auth-logo {
-  margin: 0; font-size: 26px; text-align: center; font-weight: 700;
-  background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent;
+  margin: 0; font-size: 24px; text-align: center; font-weight: 650; letter-spacing: -0.01em;
+  color: var(--text);
 }
 .auth-sub { margin: -6px 0 6px; text-align: center; color: var(--muted); font-size: 14px; }
 .auth-field { display: flex; flex-direction: column; gap: 5px; }
@@ -576,20 +600,20 @@ body {
 .auth-field input:focus { outline: none; border-color: var(--accent); }
 .auth-hint { color: var(--muted); font-size: 11px; }
 .auth-error {
+  display: flex; align-items: center; gap: 6px;
   background: color-mix(in srgb, var(--danger) 14%, var(--panel)); color: var(--danger);
   border: 1px solid color-mix(in srgb, var(--danger) 35%, transparent);
   padding: 8px 10px; border-radius: 8px; font-size: 13px;
 }
 .auth-submit {
   margin-top: 6px;
-  padding: 11px;
-  border: none; border-radius: 8px;
-  background: var(--grad); color: white;
+  padding: 12px;
+  border: none; border-radius: 12px;
+  background: var(--primary); color: var(--on-primary);
   font: inherit; font-weight: 600; cursor: pointer;
-  box-shadow: 0 6px 18px color-mix(in srgb, var(--accent) 35%, transparent);
-  transition: filter 0.15s, transform 0.05s;
+  transition: background 0.15s, transform 0.05s;
 }
-.auth-submit:hover { filter: brightness(1.06); }
+.auth-submit:hover { background: var(--primary-hover); }
 .auth-submit:active { transform: translateY(1px); }
 .auth-submit:disabled { opacity: 0.6; cursor: default; box-shadow: none; }
 .auth-switch { text-align: center; font-size: 13px; color: var(--muted); }
@@ -641,10 +665,11 @@ body {
 .cal-tasks { display: flex; flex-direction: column; gap: 2px; overflow: hidden; }
 .cal-task {
   display: flex; align-items: center; gap: 4px; text-align: left;
-  border: none; background: var(--bg); color: var(--text); font: inherit; font-size: 11px;
+  border: none; background: var(--surface-2); color: var(--text); font: inherit; font-size: 11px;
   padding: 2px 5px; border-radius: 5px; cursor: pointer;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
+.cal-task:hover { background: color-mix(in srgb, var(--text) 12%, var(--panel)); }
 .cal-task.done { opacity: 0.5; text-decoration: line-through; }
 .cal-task .pd { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
 
@@ -654,7 +679,7 @@ body {
   gap: 12px; height: calc(100vh - 100px);
 }
 .quadrant {
-  border: 1px solid var(--border); border-radius: 12px; padding: 12px;
+  border: 1px solid var(--border); border-radius: 16px; padding: 12px;
   display: flex; flex-direction: column; background: var(--panel);
   border-top-width: 3px;
 }
@@ -668,7 +693,7 @@ body {
 .quadrant-head span { font-size: 12px; color: var(--muted); }
 .quadrant-body { display: flex; flex-direction: column; gap: 6px; overflow-y: auto; flex: 1; }
 .matrix-card {
-  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px;
   padding: 8px 10px; cursor: grab; font-size: 13px;
 }
 .matrix-card:active { cursor: grabbing; }
@@ -681,10 +706,10 @@ body {
   border: 1px solid var(--border); border-radius: 8px; background: var(--panel); color: var(--text); font: inherit;
 }
 .habit-add button, .cd-add button {
-  border: none; background: var(--grad); color: white; border-radius: 8px;
+  border: none; background: var(--primary); color: var(--on-primary); border-radius: 10px;
   padding: 0 18px; cursor: pointer; font: inherit; font-weight: 600;
 }
-.habit-add button:hover, .cd-add button:hover { filter: brightness(1.06); }
+.habit-add button:hover, .cd-add button:hover { background: var(--primary-hover); }
 /* Odat yaratish formasi */
 .habit-form {
   border: 1px solid var(--border); border-radius: 12px; background: var(--panel);
@@ -730,7 +755,7 @@ body {
 .preset button:hover { border-color: var(--accent); color: var(--accent); }
 
 .habit-list { display: flex; flex-direction: column; gap: 10px; }
-.habit-card { border: 1px solid var(--border); border-radius: 12px; background: var(--panel); padding: 12px 14px; }
+.habit-card { border: 1px solid var(--border); border-radius: 16px; background: var(--panel); padding: 12px 14px; }
 .habit-info { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
 .habit-dot { width: 12px; height: 12px; border-radius: 50%; }
 .habit-name { flex: 1; font-weight: 600; }
@@ -787,7 +812,6 @@ body {
 .pomo-main {
   border: none; background: var(--grad); color: white; border-radius: 10px;
   padding: 12px 28px; cursor: pointer; font: inherit; font-weight: 600; font-size: 15px;
-  box-shadow: 0 6px 18px color-mix(in srgb, var(--accent) 32%, transparent);
 }
 .pomo-main:hover { filter: brightness(1.06); }
 .pomo-reset {
@@ -816,7 +840,7 @@ body {
 /* ========== Sozlamalar ========== */
 .settings-page { max-width: 720px; margin-inline: auto; width: 100%; }
 .card {
-  border: 1px solid var(--border); border-radius: 12px; background: var(--panel);
+  border: 1px solid var(--border); border-radius: 18px; background: var(--panel);
   padding: 18px 20px; margin-bottom: 16px;
 }
 .card h3 { margin: 0 0 14px; font-size: 15px; }
@@ -842,34 +866,38 @@ body {
 .feature-row:first-child { border-top: none; }
 .feature-row em { opacity: 0.7; font-style: italic; }
 
-.btn-primary {
-  align-self: flex-start;
-  border: none; background: var(--grad); color: white; border-radius: 8px;
-  padding: 10px 20px; cursor: pointer; font: inherit; font-weight: 600;
-  box-shadow: 0 6px 18px color-mix(in srgb, var(--accent) 30%, transparent);
-  transition: filter 0.15s, transform 0.05s;
+/* Uchala tugma bir xil quti o'lchamida (bir xil padding/balandlik/shrift) —
+   yonma-yon turganda teng ko'rinadi. Faqat rang/chegara farq qiladi. */
+.btn-primary, .btn-secondary, .btn-danger {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 9px 18px; border-radius: 8px; cursor: pointer;
+  font: inherit; font-size: 14px; font-weight: 600; line-height: 1.4;
+  border: 1px solid transparent;
+  transition: filter 0.15s, transform 0.05s, border-color 0.15s, background 0.15s;
 }
-.btn-primary:hover { filter: brightness(1.06); }
+.btn-primary { align-self: flex-start; background: var(--primary); color: var(--on-primary); }
+.btn-primary:hover { background: var(--primary-hover); }
 .btn-primary:active { transform: translateY(1px); }
-.btn-primary:disabled { opacity: 0.5; cursor: default; box-shadow: none; }
-.btn-secondary {
-  border: 1px solid var(--border); background: transparent; color: var(--text);
-  border-radius: 8px; padding: 8px 16px; cursor: pointer; font: inherit;
-}
+.btn-primary:disabled { opacity: 0.5; cursor: default; }
+.btn-secondary { background: transparent; color: var(--text); border-color: var(--border); }
 .btn-secondary:hover { border-color: var(--accent); }
-.btn-danger {
-  border: 1px solid var(--danger); background: transparent; color: var(--danger);
-  border-radius: 8px; padding: 8px 16px; cursor: pointer; font: inherit; font-weight: 600;
-}
+.btn-danger { background: transparent; color: var(--danger); border-color: var(--danger); }
 .btn-danger:hover { background: var(--danger); color: white; }
 .btn-secondary:disabled, .btn-danger:disabled { opacity: 0.5; cursor: default; }
 .btn-secondary:disabled:hover { border-color: var(--border); }
+
+/* Matndan keyin yoki karta ichida to'g'ridan-to'g'ri kelgan action tugma
+   yopishib qolmasligi uchun tepadan bo'shliq (gapsiz joylar uchun xavfsizlik). */
+.card > .btn-primary, .card > .btn-secondary, .card > .btn-danger,
+p + .btn-primary, p + .btn-secondary, p + .btn-danger,
+.settings-note + .btn-primary, .settings-note + .btn-secondary, .settings-note + .btn-danger {
+  margin-top: 12px;
+}
 .danger-zone { border-color: color-mix(in srgb, var(--danger) 30%, var(--border)); }
 
-/* ========== Sayqal: soyalar va oyna effekti ========== */
+/* ========== Sayqal: soyalar ========== */
 .detail {
-  background: color-mix(in srgb, var(--panel) 85%, transparent);
-  backdrop-filter: blur(12px);
+  background: var(--panel);
 }
 .card,
 .habit-card,
@@ -983,7 +1011,7 @@ body {
 }
 .stat-num {
   font-size: 30px; font-weight: 700;
-  background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent;
+  color: var(--text);
 }
 .stat-label { font-size: 12px; color: var(--muted); margin-top: 4px; }
 .stat-h { font-size: 15px; margin: 18px 0 4px; }
@@ -1060,13 +1088,12 @@ body {
 
 /* ========== Command palette (Ctrl+K) ========== */
 .cmdk-overlay {
-  position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); z-index: 100;
+  position: fixed; inset: 0; background: rgba(15, 28, 33, 0.4); z-index: 100;
   display: flex; align-items: flex-start; justify-content: center; padding-top: 12vh;
-  backdrop-filter: blur(2px);
 }
 .cmdk {
   width: min(560px, 92vw); background: var(--panel); border: 1px solid var(--border);
-  border-radius: 14px; box-shadow: var(--shadow-lg); overflow: hidden; display: flex; flex-direction: column;
+  border-radius: 12px; box-shadow: var(--shadow-lg); overflow: hidden; display: flex; flex-direction: column;
 }
 .cmdk-input {
   border: none; border-bottom: 1px solid var(--border); background: transparent; color: var(--text);
@@ -1080,7 +1107,7 @@ body {
   padding: 9px 12px; border-radius: 8px; cursor: pointer;
 }
 .cmdk-item.active { background: var(--accent-soft); }
-.cmdk-icon { width: 20px; text-align: center; }
+.cmdk-icon { width: 20px; display: inline-flex; align-items: center; justify-content: center; color: var(--muted); }
 .cmdk-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .cmdk-hint { font-size: 11px; color: var(--muted); flex-shrink: 0; }
 .cmdk-foot {
@@ -1154,20 +1181,30 @@ body {
 
 /* ========== Statistika sahifasi ========== */
 .stat-cards {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 20px;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 20px;
 }
 .stat-card {
-  background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
-  padding: 16px; box-shadow: var(--shadow);
+  background: var(--panel); border: 1px solid var(--border); border-radius: 18px;
+  padding: 18px; box-shadow: var(--shadow);
+  display: flex; flex-direction: column; gap: 16px;
 }
-.stat-card-num { font-size: 26px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-.stat-card-icon { font-size: 18px; }
-.stat-card-lbl { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.stat-card-head { display: flex; align-items: center; gap: 10px; }
+.stat-card-chip {
+  width: 36px; height: 36px; flex-shrink: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 11px; background: var(--accent-soft); color: var(--accent);
+}
+.stat-card-lbl { font-size: 13px; color: var(--muted); font-weight: 500; }
+.stat-card-num {
+  font-size: 30px; font-weight: 700; line-height: 1;
+  letter-spacing: -0.02em; color: var(--text);
+}
+.stat-card-unit { font-size: 15px; font-weight: 600; color: var(--muted); margin-left: 5px; }
 
 .chart-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
 .chart-card {
-  background: var(--panel); border: 1px solid var(--border); border-radius: 14px;
-  padding: 16px 18px; box-shadow: var(--shadow); min-width: 0;
+  background: var(--panel); border: 1px solid var(--border); border-radius: 18px;
+  padding: 18px 20px; box-shadow: var(--shadow); min-width: 0;
 }
 .chart-card.wide { grid-column: 1 / -1; }
 .chart-card h3 { margin: 0 0 14px; font-size: 14px; font-weight: 600; }
@@ -1230,24 +1267,34 @@ body {
 }
 
 /* ---- Chat ---- */
-.chat-tab { display: flex; flex-direction: column; height: 60vh; }
-.chat-messages { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding: 4px; }
+/* Chat to'liq balandlikni egallaydi — composer har doim pastda turadi (o'rtada emas) */
+.chat-tab { display: flex; flex-direction: column; height: calc(100vh - 195px); min-height: 340px; }
+.chat-messages { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; padding: 4px 2px; }
 .chat-msg {
-  position: relative; align-self: flex-start; max-width: 78%;
-  background: var(--card, #fff); border: 1px solid var(--border);
-  border-radius: 12px; padding: 7px 12px; font-size: 14px;
+  position: relative; align-self: flex-start; max-width: 75%;
+  background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: 14px; border-bottom-left-radius: 5px;
+  padding: 8px 12px; font-size: 14px;
 }
-.chat-msg.mine { align-self: flex-end; background: var(--accent-soft); border-color: var(--accent-soft); }
+.chat-msg.mine {
+  align-self: flex-end; background: var(--accent-soft); border-color: transparent;
+  border-radius: 14px; border-bottom-right-radius: 5px;
+}
 .chat-author { display: block; font-size: 11px; font-weight: 700; color: var(--accent); margin-bottom: 2px; }
-.chat-text { display: block; word-break: break-word; white-space: pre-wrap; }
-.chat-time { display: block; font-size: 10px; color: var(--muted); text-align: right; margin-top: 2px; }
+.chat-text { display: block; word-break: break-word; white-space: pre-wrap; line-height: 1.4; }
+.chat-time { display: block; font-size: 10px; color: var(--muted); text-align: right; margin-top: 3px; }
 .chat-del {
   position: absolute; top: 2px; right: 4px; border: none; background: transparent;
   color: var(--muted); cursor: pointer; font-size: 14px; opacity: 0; transition: opacity .15s;
 }
 .chat-msg:hover .chat-del { opacity: 1; }
-.chat-form { display: flex; gap: 8px; margin-top: 10px; }
-.chat-form input { flex: 1; padding: 9px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); font: inherit; }
+.chat-form { display: flex; gap: 8px; margin-top: 10px; padding-top: 12px; border-top: 1px solid var(--border); }
+.chat-form input {
+  flex: 1; padding: 11px 16px; border: 1px solid var(--border); border-radius: 999px;
+  background: var(--panel); color: var(--text); font: inherit;
+}
+.chat-form input:focus { outline: none; border-color: var(--accent); }
+.chat-form .btn-primary { border-radius: 999px; }
 
 /* ---- Challenge ---- */
 .challenge-form { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; padding: 12px; border: 1px solid var(--border); border-radius: 10px; }
@@ -1299,7 +1346,7 @@ body {
 
 /* Web Push sozlamasi */
 .push-row { margin-top: 10px; }
-.settings-note.err { color: var(--danger); }
+.settings-note.err { color: var(--danger); display: flex; align-items: center; gap: 6px; }
 
 /* ======================================================================
    Mobil responsive (≤ 820px) — sidebar off-canvas drawer, detail to'liq
@@ -1315,9 +1362,10 @@ body {
     top: 0; left: 0; bottom: 0;
     width: 260px; max-width: 82vw;
     z-index: 50;
+    margin: 0;
+    border-radius: 0 20px 20px 0;
     transform: translateX(-100%);
     transition: transform 0.25s ease;
-    border-right: 1px solid var(--border);
   }
   .app.nav-open .sidebar { transform: translateX(0); box-shadow: 0 0 40px rgba(0,0,0,0.3); }
   .app.nav-open .nav-backdrop {

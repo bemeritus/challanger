@@ -1,26 +1,36 @@
 // Yengil, kutubxonasiz SVG chart komponentlari (mavzuga moslashuvchan).
 // Ranglar CSS o'zgaruvchilari orqali (light/dark) — dataviz uslubiga mos.
 import { useId } from "react";
+import { Icon, type IconName } from "./Icon";
 
-// ---------- Stat tile (hero raqam) ----------
+// ---------- Stat tile (ikonka-chip + sarlavha tepada, katta raqam pastda) ----------
 export function StatTile({
   value,
   label,
   icon,
+  unit,
   accent,
 }: {
   value: string | number;
   label: string;
-  icon?: string;
+  icon?: IconName;
+  unit?: string;
   accent?: string;
 }) {
   return (
     <div className="stat-card">
-      <div className="stat-card-num" style={accent ? { color: accent } : undefined}>
-        {icon && <span className="stat-card-icon">{icon}</span>}
-        {value}
+      <div className="stat-card-head">
+        {icon && (
+          <span className="stat-card-chip" style={accent ? { color: accent } : undefined}>
+            <Icon name={icon} size={18} />
+          </span>
+        )}
+        <span className="stat-card-lbl">{label}</span>
       </div>
-      <div className="stat-card-lbl">{label}</div>
+      <div className="stat-card-num">
+        {value}
+        {unit && <span className="stat-card-unit">{unit}</span>}
+      </div>
     </div>
   );
 }

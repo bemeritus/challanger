@@ -2,13 +2,14 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { Habit, Project, Task } from "../types";
 import type { Page, Selection } from "./Sidebar";
 import { useT, getLang } from "../i18n";
+import { Icon, type IconName } from "./Icon";
 
 interface Item {
   kind: "task" | "habit" | "project" | "page";
   id: string;
   label: string;
   hint: string;
-  icon: string;
+  icon: IconName;
   action: () => void;
 }
 
@@ -20,15 +21,15 @@ interface Props {
   onSelect: (s: Selection) => void;
 }
 
-const PAGE_ITEMS: { page: Page; labelKey: string; icon: string }[] = [
-  { page: "calendar", labelKey: "nav.calendar", icon: "📆" },
-  { page: "eisenhower", labelKey: "nav.eisenhower", icon: "🧭" },
-  { page: "habits", labelKey: "nav.habits", icon: "🔥" },
-  { page: "groups", labelKey: "nav.groups", icon: "👥" },
-  { page: "stats", labelKey: "nav.stats", icon: "📈" },
-  { page: "pomodoro", labelKey: "nav.pomodoro", icon: "🍅" },
-  { page: "countdown", labelKey: "nav.countdown", icon: "⏳" },
-  { page: "settings", labelKey: "nav.settings", icon: "⚙️" },
+const PAGE_ITEMS: { page: Page; labelKey: string; icon: IconName }[] = [
+  { page: "calendar", labelKey: "nav.calendar", icon: "calendar-days" },
+  { page: "eisenhower", labelKey: "nav.eisenhower", icon: "grid" },
+  { page: "habits", labelKey: "nav.habits", icon: "repeat" },
+  { page: "groups", labelKey: "nav.groups", icon: "users" },
+  { page: "stats", labelKey: "nav.stats", icon: "bar-chart" },
+  { page: "pomodoro", labelKey: "nav.pomodoro", icon: "timer" },
+  { page: "countdown", labelKey: "nav.countdown", icon: "hourglass" },
+  { page: "settings", labelKey: "nav.settings", icon: "sliders" },
 ];
 
 export function CommandPalette({ tasks, habits, projects, onSelectTask, onSelect }: Props) {
@@ -80,7 +81,7 @@ export function CommandPalette({ tasks, habits, projects, onSelectTask, onSelect
         id: p.id,
         label: p.name,
         hint: t("cmdk.project"),
-        icon: "📁",
+        icon: "folder",
         action: () => onSelect({ kind: "project", id: p.id }),
       });
     }
@@ -90,7 +91,7 @@ export function CommandPalette({ tasks, habits, projects, onSelectTask, onSelect
         id: task.id,
         label: task.title,
         hint: task.completed ? t("cmdk.taskDone") : t("cmdk.task"),
-        icon: task.completed ? "✅" : "⚪",
+        icon: task.completed ? "circle-check" : "circle",
         action: () => onSelectTask(task.id),
       });
     }
@@ -100,7 +101,7 @@ export function CommandPalette({ tasks, habits, projects, onSelectTask, onSelect
         id: h.id,
         label: h.name,
         hint: t("cmdk.habit"),
-        icon: "🔥",
+        icon: "repeat",
         action: () => onSelect({ kind: "page", page: "habits" }),
       });
     }
@@ -156,7 +157,7 @@ export function CommandPalette({ tasks, habits, projects, onSelectTask, onSelect
               onMouseEnter={() => setActive(idx)}
               onClick={() => run(i)}
             >
-              <span className="cmdk-icon">{i.icon}</span>
+              <span className="cmdk-icon"><Icon name={i.icon} /></span>
               <span className="cmdk-label">{i.label}</span>
               <span className="cmdk-hint">{i.hint}</span>
             </button>

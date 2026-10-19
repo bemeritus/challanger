@@ -2,6 +2,7 @@ import { useState } from "react";
 import { api, tokenStore } from "../api";
 import type { User } from "../types";
 import { useT } from "../i18n";
+import { Icon } from "./Icon";
 
 interface Props {
   onAuth: (user: User) => void;
@@ -87,7 +88,7 @@ export function AuthScreen({ onAuth }: Props) {
           />
         </label>
 
-        {error && <div className="auth-error">⚠️ {error}</div>}
+        {error && <div className="auth-error"><Icon name="alert" size={14} /> {error}</div>}
 
         <button className="auth-submit" type="submit" disabled={busy}>
           {busy ? "…" : mode === "login" ? t("auth.login") : t("auth.signup")}

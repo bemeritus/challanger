@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { Project, User } from "../types";
 import { useT } from "../i18n";
 import { useFeatures } from "../features";
+import { Icon, type IconName } from "./Icon";
 
 export type Page = "calendar" | "eisenhower" | "habits" | "groups" | "stats" | "pomodoro" | "countdown" | "settings";
 
@@ -10,14 +11,14 @@ export type Selection =
   | { kind: "project"; id: string }
   | { kind: "page"; page: Page };
 
-const PAGES: { page: Page; key: string; icon: string }[] = [
-  { page: "calendar", key: "nav.calendar", icon: "📆" },
-  { page: "eisenhower", key: "nav.eisenhower", icon: "🧭" },
-  { page: "habits", key: "nav.habits", icon: "🔥" },
-  { page: "groups", key: "nav.groups", icon: "👥" },
-  { page: "stats", key: "nav.stats", icon: "📈" },
-  { page: "pomodoro", key: "nav.pomodoro", icon: "🍅" },
-  { page: "countdown", key: "nav.countdown", icon: "⏳" },
+const PAGES: { page: Page; key: string; icon: IconName }[] = [
+  { page: "calendar", key: "nav.calendar", icon: "calendar-days" },
+  { page: "eisenhower", key: "nav.eisenhower", icon: "grid" },
+  { page: "habits", key: "nav.habits", icon: "repeat" },
+  { page: "groups", key: "nav.groups", icon: "users" },
+  { page: "stats", key: "nav.stats", icon: "bar-chart" },
+  { page: "pomodoro", key: "nav.pomodoro", icon: "timer" },
+  { page: "countdown", key: "nav.countdown", icon: "hourglass" },
 ];
 
 interface Props {
@@ -32,11 +33,11 @@ interface Props {
 }
 
 const SMART = [
-  { view: "today", key: "nav.today", icon: "📅" },
-  { view: "upcoming", key: "nav.upcoming", icon: "🗓️" },
-  { view: "all", key: "nav.all", icon: "📥" },
-  { view: "completed", key: "nav.completed", icon: "✅" },
-] as const;
+  { view: "today", key: "nav.today", icon: "sun" },
+  { view: "upcoming", key: "nav.upcoming", icon: "calendar" },
+  { view: "all", key: "nav.all", icon: "inbox" },
+  { view: "completed", key: "nav.completed", icon: "circle-check" },
+] as const satisfies readonly { view: string; key: string; icon: IconName }[];
 
 export function Sidebar({
   projects,
@@ -65,7 +66,7 @@ export function Sidebar({
 
   return (
     <aside className="sidebar">
-      <h1 className="logo">✓ Challanger</h1>
+      <h1 className="logo"><Icon name="check" /> Challanger</h1>
 
       <nav className="nav-group">
         {SMART.map((s) => {
@@ -76,7 +77,7 @@ export function Sidebar({
               className={`nav-item ${active ? "active" : ""}`}
               onClick={() => onSelect({ kind: "smart", view: s.view })}
             >
-              <span className="nav-icon">{s.icon}</span>
+              <span className="nav-icon"><Icon name={s.icon} /></span>
               <span className="nav-label">{t(s.key)}</span>
               <span className="nav-count">{counts[s.view]}</span>
             </button>
@@ -94,7 +95,7 @@ export function Sidebar({
               className={`nav-item ${active ? "active" : ""}`}
               onClick={() => onSelect({ kind: "page", page: p.page })}
             >
-              <span className="nav-icon">{p.icon}</span>
+              <span className="nav-icon"><Icon name={p.icon} /></span>
               <span className="nav-label">{t(p.key)}</span>
             </button>
           );
@@ -140,10 +141,10 @@ export function Sidebar({
         >
           <span className="avatar">{user.username.charAt(0).toUpperCase()}</span>
           <span className="username">{user.username}</span>
-          <span className="gear">⚙️</span>
+          <span className="gear"><Icon name="sliders" /></span>
         </button>
-        <button className="logout" onClick={onLogout} title={t("nav.logout")}>
-          ⎋
+        <button className="logout" onClick={onLogout} title={t("nav.logout")} aria-label={t("nav.logout")}>
+          <Icon name="logout" />
         </button>
       </div>
     </aside>

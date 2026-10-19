@@ -3,6 +3,7 @@ import { api, type PomodoroStats } from "../api";
 import type { GroupDetail, Habit, Project, Subtask, Task } from "../types";
 import { PRIORITY_COLORS } from "../types";
 import { StatTile, LineChart, HBarChart, Donut, ColumnChart } from "./charts";
+import { Icon } from "./Icon";
 import { useT, priorityLabel, weekdayShorts, getLang } from "../i18n";
 
 const S1 = "var(--viz-s1)"; // ko'k
@@ -209,7 +210,7 @@ export function StatsPage({ userId }: { userId: string }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, userId, getLang()]);
 
-  if (error) return <div className="page stats-page"><div className="error-bar">⚠️ {error}</div></div>;
+  if (error) return <div className="page stats-page"><div className="error-bar"><Icon name="alert" size={15} /> {error}</div></div>;
   if (!stats) return <div className="page stats-page"><div className="page-head"><h2>{t("stats.title")}</h2></div><div className="empty">{t("app.loading")}</div></div>;
 
   return (
@@ -221,16 +222,16 @@ export function StatsPage({ userId }: { userId: string }) {
 
       {/* KPI tiles */}
       <div className="stat-cards">
-        <StatTile value={stats.kpi.completionRate + "%"} label={t("stats.completionRate")} icon="🎯" accent={S1} />
-        <StatTile value={stats.kpi.doneTasks} label={t("stats.doneTasks")} icon="✅" />
-        <StatTile value={stats.kpi.totalTasks} label={t("stats.totalTasks")} icon="📋" />
-        <StatTile value={stats.kpi.habitCheckins} label={t("stats.habitCheckins")} icon="🔥" />
-        <StatTile value={stats.kpi.bestStreak} label={t("stats.bestStreak")} icon="🏆" />
-        <StatTile value={`${stats.kpi.subDone}/${stats.kpi.subTotal}`} label={t("stats.subtasks")} icon="☑" />
-        <StatTile value={stats.kpi.pomoToday} label={t("stats.pomoToday")} icon="🍅" accent={POMO} />
-        <StatTile value={t("stats.hours", { n: Math.round(stats.kpi.pomoMinutes / 60) })} label={t("stats.focusTime")} icon="⏱" />
+        <StatTile value={stats.kpi.completionRate} unit="%" label={t("stats.completionRate")} icon="target" accent={S1} />
+        <StatTile value={stats.kpi.doneTasks} label={t("stats.doneTasks")} icon="circle-check" />
+        <StatTile value={stats.kpi.totalTasks} label={t("stats.totalTasks")} icon="clipboard" />
+        <StatTile value={stats.kpi.habitCheckins} label={t("stats.habitCheckins")} icon="flame" />
+        <StatTile value={stats.kpi.bestStreak} label={t("stats.bestStreak")} icon="award" />
+        <StatTile value={`${stats.kpi.subDone}/${stats.kpi.subTotal}`} label={t("stats.subtasks")} icon="list-checks" />
+        <StatTile value={stats.kpi.pomoToday} label={t("stats.pomoToday")} icon="timer" />
+        <StatTile value={Math.round(stats.kpi.pomoMinutes / 60)} unit={t("stats.hoursUnit")} label={t("stats.focusTime")} icon="clock" />
         {stats.hasGroups && (
-          <StatTile value={stats.kpi.groupTasksDone} label={t("stats.groupDone")} icon="👥" />
+          <StatTile value={stats.kpi.groupTasksDone} label={t("stats.groupDone")} icon="users" />
         )}
       </div>
 

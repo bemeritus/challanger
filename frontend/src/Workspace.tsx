@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { api } from "./api";
 import { useT } from "./i18n";
 import { useFeatures } from "./features";
+import { Icon } from "./components/Icon";
 import { parseTask } from "./nlp";
 import type { Habit, Project, Subtask, Task, User } from "./types";
 import { Sidebar, type Selection } from "./components/Sidebar";
@@ -65,7 +66,23 @@ export default function Workspace({ user, onLogout, onUserUpdate }: Props) {
   // Kutilayotgan o'chirish id'si — unmount/sahifa yopilishida yakunlash uchun (state emas, ref).
   const pendingDeleteId = useRef<string | null>(null);
 
-  // Dastlabki yuklash
+  // Barcha ro'yxatlarni serverdan qayta yuklaydi (jonli yangilanish uchun).
+  const reload = useCallback(() => {
+    // Undo (o'chirish) oynasi ochiq bo'lsa yangilamaymiz — o'chirilayotgan vazifa qaytib kelmasligi uchun.
+    if (pendingDeleteId.current) return;
+    Promise.all([api.listProjects(), api.listTasks(), api.listHabits(), api.listSubtasks()])
+      .then(([p, t, h, s]) => {
+        setProjects(p);
+        setTasks(t);
+        setHabits(h);
+        setSubtasks(s);
+      })
+      .catch(() => {
+        /* jonli yangilanish — xatoni jim o'tkazamiz (keyingi urinishda qayta sinaydi) */
+      });
+  }, []);
+
+  // Dastlabki yuklash (xatoni ko'rsatamiz)
   useEffect(() => {
     Promise.all([api.listProjects(), api.listTasks(), api.listHabits(), api.listSubtasks()])
       .then(([p, t, h, s]) => {
@@ -76,6 +93,24 @@ export default function Workspace({ user, onLogout, onUserUpdate }: Props) {
       })
       .catch((e) => setError(String(e.message ?? e)));
   }, []);
+
+  // Jonli yangilanish: oyna fokusga qaytganda, ko'rinadigan bo'lganda va har 45s.
+  useEffect(() => {
+    const onFocus = () => reload();
+    const onVisible = () => {
+      if (document.visibilityState === "visible") reload();
+    };
+    window.addEventListener("focus", onFocus);
+    document.addEventListener("visibilitychange", onVisible);
+    const id = setInterval(() => {
+      if (document.visibilityState === "visible") reload();
+    }, 45000);
+    return () => {
+      window.removeEventListener("focus", onFocus);
+      document.removeEventListener("visibilitychange", onVisible);
+      clearInterval(id);
+    };
+  }, [reload]);
 
   // Tanlovni saqlab turamiz — sahifa yangilangandan keyin ham o'sha joyda qolamiz.
   useEffect(() => {
@@ -670,7 +705,7 @@ export default function Workspace({ user, onLogout, onUserUpdate }: Props) {
 
         {error && (
           <div className="error-bar" onClick={() => setError(null)}>
-            ⚠️ {error} {t("main.errorClose")}
+            <Icon name="alert" size={15} /> {error} {t("main.errorClose")}
           </div>
         )}
 
@@ -727,7 +762,7 @@ export default function Workspace({ user, onLogout, onUserUpdate }: Props) {
 
       {pendingDelete && (
         <div className="undo-toast">
-          <span>🗑 "{pendingDelete.title}" {t("main.undoDeleted")}</span>
+          <span><Icon name="trash" size={14} /> "{pendingDelete.title}" {t("main.undoDeleted")}</span>
           <button onClick={undoDelete}>{t("main.undo")}</button>
         </div>
       )}

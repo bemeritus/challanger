@@ -73,7 +73,10 @@ function currentStreak(days: Set<string>): number {
 export function GroupsPage({ user }: { user: User }) {
   const t = useT();
   const [groups, setGroups] = useState<GroupSummary[]>([]);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  // Ochiq guruhni eslab qolamiz — sahifa yangilangandan keyin ham o'sha guruhda qolamiz.
+  const [selectedId, setSelectedId] = useState<string | null>(
+    () => localStorage.getItem("challanger_group") || null
+  );
   const [detail, setDetail] = useState<GroupDetail | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [newName, setNewName] = useState("");
@@ -85,6 +88,19 @@ export function GroupsPage({ user }: { user: User }) {
   useEffect(() => {
     loadGroups();
   }, []);
+
+  // Tanlangan guruhni saqlaymiz (yoki tozalaymiz).
+  useEffect(() => {
+    if (selectedId) localStorage.setItem("challanger_group", selectedId);
+    else localStorage.removeItem("challanger_group");
+  }, [selectedId]);
+
+  // Saqlangan guruh endi mavjud bo'lmasa (o'chirilgan/chiqilgan) — ro'yxatga qaytamiz.
+  useEffect(() => {
+    if (selectedId && groups.length && !groups.some((g) => g.id === selectedId)) {
+      setSelectedId(null);
+    }
+  }, [groups, selectedId]);
 
   useEffect(() => {
     if (!selectedId) {
@@ -219,10 +235,19 @@ interface DetailProps {
 }
 
 type Tab = "habits" | "tasks" | "chat" | "challenges" | "stats" | "activity" | "members";
+const TABS: Tab[] = ["habits", "tasks", "chat", "challenges", "stats", "activity", "members"];
+const TAB_KEY = "challanger_group_tab";
 
 function GroupDetailView({ detail, user, onBack, onChanged, onLeftOrDeleted, setError, error }: DetailProps) {
   const t = useT();
-  const [tab, setTab] = useState<Tab>("habits");
+  // Faol tabni ham eslab qolamiz — yangilangach o'sha tabda qolamiz.
+  const [tab, setTab] = useState<Tab>(() => {
+    const saved = localStorage.getItem(TAB_KEY) as Tab | null;
+    return saved && TABS.includes(saved) ? saved : "habits";
+  });
+  useEffect(() => {
+    localStorage.setItem(TAB_KEY, tab);
+  }, [tab]);
   const [habitName, setHabitName] = useState("");
   const [memberName, setMemberName] = useState("");
   const [taskName, setTaskName] = useState("");

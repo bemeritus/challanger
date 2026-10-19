@@ -2,6 +2,7 @@ import type { Task } from "../types";
 import { PRIORITY_COLORS } from "../types";
 import { recurrenceLabel } from "../i18n";
 import { formatDue } from "../util";
+import { Icon } from "./Icon";
 
 interface Props {
   task: Task;
@@ -75,15 +76,15 @@ export function TaskItem({
         <div className="task-meta">
           {due.text && <span className={`due tone-${due.tone}`}>{due.text}</span>}
           {task.recurrence && (
-            <span className="recur">🔁 {recurrenceLabel(task.recurrence)}</span>
+            <span className="recur"><Icon name="repeat" size={13} /> {recurrenceLabel(task.recurrence)}</span>
           )}
-          {task.reminder_at && <span className="reminder">⏰</span>}
-          {task.notes && <span className="has-notes">📝</span>}
+          {task.reminder_at && <span className="reminder"><Icon name="clock" size={13} /></span>}
+          {task.notes && <span className="has-notes"><Icon name="file-text" size={13} /></span>}
           {subtaskCount && subtaskCount.total > 0 && (
             <span
               className={`subtask-badge ${subtaskCount.done === subtaskCount.total ? "complete" : ""}`}
             >
-              ☑ {subtaskCount.done}/{subtaskCount.total}
+              <Icon name="list-checks" size={13} /> {subtaskCount.done}/{subtaskCount.total}
             </span>
           )}
           {(task.tags ?? []).map((t) => (

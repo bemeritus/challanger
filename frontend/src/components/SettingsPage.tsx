@@ -5,6 +5,7 @@ import { getTheme, setTheme, type Theme } from "../theme";
 import { getLang, setLang, useT, LANG_LABELS, type Lang } from "../i18n";
 import { pushState as getPushState, enablePush, disablePush } from "../push";
 import { useFeatures } from "../features";
+import { Icon } from "./Icon";
 
 interface Props {
   user: User;
@@ -498,7 +499,7 @@ export function SettingsPage({ user, onUserUpdate, onLogout }: Props) {
             </button>
           </div>
         )}
-        {pushErr && <p className="settings-note err">⚠️ {pushErr}</p>}
+        {pushErr && <p className="settings-note err"><Icon name="alert" size={14} /> {pushErr}</p>}
       </section>
 
       {/* Telegram */}
