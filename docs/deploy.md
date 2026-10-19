@@ -117,6 +117,24 @@ Migratsiyalar startda avtomatik qo'llanadi. Eski image'larni tozalash:
 docker image prune -f
 ```
 
+### Modullar va admin (0017 migratsiyasidan keyin — bir martalik)
+
+Ilovada endi **modullarni UI orqali yoqib/o'chirish** mumkin: har foydalanuvchi o'ziga
+yashiradi, **admin** esa butun ilova uchun o'chira oladi (global kill-switch).
+
+Admin huquqi **birinchi ro'yxatdan o'tgan** foydalanuvchiga avtomatik beriladi. Ammo
+**mavjud** bazada (allaqachon foydalanuvchilar bor) hech kim admin bo'lmaydi — shuning
+uchun deploy'dan keyin o'z akkauntingizni bir marta qo'lda admin qiling:
+
+```bash
+docker compose exec db \
+  psql -U challanger -d challanger \
+  -c "UPDATE users SET is_admin = true WHERE username = 'SIZNING_USERNAME';"
+```
+
+> Bu faqat **global** boshqaruv uchun kerak. Shaxsiy "modulni yashirish" har bir
+> foydalanuvchiga adminliksiz ham ishlaydi.
+
 ---
 
 ## 5. Zaxira (backup) va tiklash
